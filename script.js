@@ -92,16 +92,23 @@ const handleAddUrl = () => {
     }
 };
 
+// Event delegation function to handle all filter changes
+const handleFilterChange = (event) => {
+    // Only process events from filter elements
+    if (event.target.matches('#searchInput, #typeFilter, #stageFilter, #categoryFilters input[type="checkbox"]')) {
+        applyFiltersAndRender();
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Render the 'Other Categories' checkboxes using fundingFormats
     renderCategories(fundingFormats, categoryFiltersElement); // Pass formats and container
     renderFundings(fundings, fundingListElement); // Initial render of all fundings
 
-    searchInputElement.addEventListener('input', applyFiltersAndRender);
-    typeFilterElement.addEventListener('change', applyFiltersAndRender);
-    stageFilterElement.addEventListener('change', applyFiltersAndRender);
-    categoryFiltersElement.addEventListener('change', applyFiltersAndRender);
+    // Use event delegation for all filter changes - more efficient and prevents memory leaks
+    document.addEventListener('input', handleFilterChange);
+    document.addEventListener('change', handleFilterChange);
 
-    // New event listener for the URL input button
+    // Event listener for the URL input button
     addUrlButtonElement.addEventListener('click', handleAddUrl);
 });
